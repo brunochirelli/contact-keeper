@@ -1,0 +1,3 @@
+## Config
+
+For global variables

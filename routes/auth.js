@@ -22,8 +22,15 @@ const User = require("../models/User");
  * @desc       Get logged in user
  * @access     Private
  */
-router.get("/", (req, res) => {
-    res.send("Get authenticated/logged user");
+router.get("/", auth, async (req, res) => {
+    try {
+        // if authorize, de req will have a user attached
+        const user = await User.findById(req.user.id).select("-password"); // user minus password
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
 });
 
 /**

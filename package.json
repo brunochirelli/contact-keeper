@@ -1,7 +1,24 @@
 {
     "name": "contact-keeper",
     "version": "1.0.0",
-    "main": "index.js",
+    "description": "Contact Manager App",
+    "main": "server.js",
     "license": "MIT",
-    "author": "Bruno Chirelli"
+    "author": "Bruno Chirelli",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "config": "^3.3.1",
+        "express": "^4.17.1",
+        "express-validator": "^6.6.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.9.22"
+    },
+    "devDependencies": {
+        "concurrently": "^5.2.0",
+        "nodemon": "^2.0.4"
+    },
+    "scripts": {
+        "start": "node server.js",
+        "server": "nodemon server.js"
+    }
 }

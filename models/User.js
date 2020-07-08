@@ -20,4 +20,5 @@ const UserSchema = mongoose.Schema({
     },
 });
 
+// register the collection in the db connected
 module.exports = mongoose.model("user", UserSchema);

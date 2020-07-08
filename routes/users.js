@@ -1,5 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 const { check, validationResult } = require("express-validator");
@@ -37,9 +39,7 @@ router.post(
     ],
     async (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+        if (!errors.isEmpty()) res.status(400).json({ errors: errors.array() });
 
         // validated
         const { name, email, password } = req.body;
@@ -49,23 +49,45 @@ router.post(
 
             if (user) res.status(400).json({ msg: "User already exists" });
 
-            // create a new instance for the user
+            // create a new instance for the user...
             user = new User({
                 name,
                 email,
                 password,
             });
 
-            // generate a salt for hashing
+            // generate a salt for hashing...
             const salt = await bcrypt.genSalt(10);
 
-            // assign a hash password for the input
+            // assign a hash password for the input...
             user.password = await bcrypt.hash(password, salt);
 
-            // so, save the user
+            // so, save the user.
             await user.save();
 
-            res.send("User saved");
+            // JWT
+            const payload = {
+                user: {
+                    id: user.id,
+                    /**
+                     * full access for the user information by id
+                     *
+                     * Why not the e-mail ?
+                     * To not expose confidential information
+                     * since the id is also a unique identifier too
+                     */
+                },
+            };
+
+            jwt.sign(
+                payload,
+                process.env.JWT_SECRET,
+                { expiresIn: 360000 },
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({ token });
+                }
+            );
         } catch (err) {
             console.error(err.message);
             res.status(500).send("Server error"); // server error

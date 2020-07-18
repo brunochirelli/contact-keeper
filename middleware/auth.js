@@ -3,7 +3,6 @@
  *  Check if was a token in the HEADER
  *  and protect routes with this middleware if not
  * */
-
 require("dotenv").config;
 const jwt = require("jsonwebtoken");
 

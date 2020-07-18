@@ -6,6 +6,10 @@ const ContactSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
     },
+    name: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
     },
@@ -22,4 +26,4 @@ const ContactSchema = mongoose.Schema({
     },
 });
 
-modules.exports = mongoose.model("contact", ContactSchema);
+module.exports = mongoose.model("contact", ContactSchema);

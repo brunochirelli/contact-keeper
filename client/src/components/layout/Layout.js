@@ -8,8 +8,8 @@ const Layout = ({ children }) => {
   return (
     <>
       <CssBaseline />
-      <Header />
-      <main id="main">{children}</main>
+      {/* <Header /> */}
+      <main id="content">{children}</main>
       {/* <Footer /> */}
     </>
   );

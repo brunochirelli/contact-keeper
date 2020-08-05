@@ -1,5 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -10,6 +11,7 @@ import {
 } from "@material-ui/core";
 import { Visibility, VisibilityOff, Error } from "@material-ui/icons";
 
+import AuthContext from "../../context/auth/AuthContext";
 import AlertContext from "../../context/alert/alertContext";
 import Alert from "../layout/Alert";
 
@@ -33,7 +35,12 @@ const FormStyled = styled.form`
 `;
 
 const SignUp = () => {
+  const history = useHistory();
+
   // Context
+  const authContext = useContext(AuthContext);
+  const { register, error, clearErrors, isAuthenticated } = authContext;
+
   const alertContext = useContext(AlertContext);
   const { setAlert } = alertContext;
 
@@ -52,13 +59,26 @@ const SignUp = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("cadastro com sucesso...", data);
-    setAlert("Logado com sucesso", "success");
+    const { name, email, password } = data;
+    register({ name, email, password });
   };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  // Effect
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push("/");
+    }
+
+    if (error) {
+      setAlert(error, "error");
+      clearErrors();
+    }
+    // eslint-disable-next-line
+  }, [error, isAuthenticated, history]);
 
   return (
     <FormStyled onSubmit={form.handleSubmit(onSubmit)}>
@@ -122,7 +142,7 @@ const SignUp = () => {
       </div>
       <div>
         <Controller
-          name="pass"
+          name="password"
           type={showPassword ? "text" : "password"}
           control={form.control}
           defaultValue=""
@@ -150,7 +170,9 @@ const SignUp = () => {
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                   style={{
-                    color: form.errors.pass ? theme.palette.error.main : "gray",
+                    color: form.errors.password
+                      ? theme.palette.error.main
+                      : "gray",
                   }}
                 >
                   {showPassword ? <Visibility /> : <VisibilityOff />}
@@ -159,8 +181,8 @@ const SignUp = () => {
             ),
           }}
           label="Password"
-          error={!!form.errors.pass}
-          helperText={form.errors.pass && form.errors.pass.message}
+          error={!!form.errors.password}
+          helperText={form.errors.password && form.errors.password.message}
           variant="outlined"
           fullWidth
         />
@@ -168,14 +190,14 @@ const SignUp = () => {
 
       <div>
         <Controller
-          name="pass2"
+          name="password2"
           type={showPassword ? "text" : "password"}
           control={form.control}
           defaultValue=""
           rules={{
             required: "Confirm the password",
             validate: (value) =>
-              value === form.getValues("pass") || "Password does not match",
+              value === form.getValues("password") || "Password does not match",
           }}
           as={TextField}
           InputLabelProps={{
@@ -190,7 +212,7 @@ const SignUp = () => {
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                   style={{
-                    color: form.errors.pass2
+                    color: form.errors.password2
                       ? theme.palette.error.main
                       : "gray",
                   }}
@@ -201,15 +223,17 @@ const SignUp = () => {
             ),
           }}
           label="Confirm password"
-          helperText={form.errors.pass2 && form.errors.pass2.message}
-          error={!!form.errors.pass2}
+          helperText={form.errors.password2 && form.errors.password2.message}
+          error={!!form.errors.password2}
           variant="outlined"
           fullWidth
         />
       </div>
 
       <div>
-        <SubmitButton type="submit">Sign up</SubmitButton>
+        <SubmitButton type="submit" onFocus={() => setShowPassword(false)}>
+          Sign up
+        </SubmitButton>
       </div>
     </FormStyled>
   );

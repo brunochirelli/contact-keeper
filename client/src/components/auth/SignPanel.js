@@ -56,7 +56,7 @@ const SignPanelStyled = styled.div`
   }
 `;
 
-export default function SignPanel() {
+export default function SignPanel({ history }) {
   // Hooks
   const theme = useTheme();
 
@@ -73,8 +73,8 @@ export default function SignPanel() {
 
   return (
     <SignPanelStyled>
-      <Typography variant="h4" component="h1">
-        {value ? "Sign up" : "Sign in"}
+      <Typography variant="h4" component="h1" paragraph>
+        {value ? "Sign up" : "Welcome"}
       </Typography>
       <AppBar position="static" color="inherit" elevation={0}>
         <Tabs
@@ -85,8 +85,8 @@ export default function SignPanel() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Sign in" {...a11yProps(0)} />
-          <Tab label="Sign up" {...a11yProps(1)} />
+          <Tab label="Login" {...a11yProps(0)} />
+          <Tab label="Register" {...a11yProps(1)} />
         </Tabs>
         <span
           style={{
@@ -106,7 +106,7 @@ export default function SignPanel() {
           <SignIn />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <SignUp />
+          <SignUp history={history} />
         </TabPanel>
       </SwipeableViews>
     </SignPanelStyled>

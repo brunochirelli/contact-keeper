@@ -1,5 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -12,8 +13,10 @@ import {
   Box,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff, Error } from "@material-ui/icons";
+
 import { SubmitButton } from "../../styles/CustomStyled";
 
+import AuthContext from "../../context/auth/AuthContext";
 import AlertContext from "../../context/alert/alertContext";
 import Alert from "../layout/Alert";
 
@@ -36,10 +39,14 @@ const FormStyled = styled.form`
 
 const SignIn = () => {
   // Context
+  const authContext = useContext(AuthContext);
+  const { login, error, clearErrors, isAuthenticated } = authContext;
+
   const alertContext = useContext(AlertContext);
   const { setAlert } = alertContext;
 
   // Hooks
+  const history = useHistory();
   const theme = useTheme();
 
   // State
@@ -48,8 +55,10 @@ const SignIn = () => {
   // Form
   const form = useForm();
   const onSubmit = (data) => {
-    console.log("logado com sucesso...", data);
-    setAlert("Logado com sucesso", "primary");
+    if (!error) {
+      const { email, password } = data;
+      login({ email, password });
+    }
   };
 
   // Handles
@@ -61,6 +70,24 @@ const SignIn = () => {
     event.preventDefault();
   };
 
+  // Effect
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push("/");
+    }
+
+    if (error) {
+      // setAlert(error, "error");
+
+      form.setError("email", {
+        type: "manual",
+        message: "Invalid e-mail or password",
+      });
+      clearErrors();
+    }
+    // eslint-disable-next-line
+  }, [error, isAuthenticated, history]);
+
   return (
     <FormStyled onSubmit={form.handleSubmit(onSubmit)}>
       <div>
@@ -70,7 +97,7 @@ const SignIn = () => {
           control={form.control}
           defaultValue=""
           rules={{
-            required: "Invalid e-mail or password",
+            required: true,
           }}
           as={TextField}
           InputLabelProps={{
@@ -88,20 +115,19 @@ const SignIn = () => {
             ) : null,
           }}
           label="Email"
-          error={!!form.errors.pass || !!form.errors.email}
-          helperText={form.errors.email && form.errors.email.message}
+          error={!!form.errors.email}
           variant="outlined"
           fullWidth
         />
       </div>
       <div>
         <Controller
-          name="pass"
+          name="password"
           type={showPassword ? "text" : "password"}
           control={form.control}
           defaultValue=""
           rules={{
-            required: "Invalid e-mail or password",
+            required: true,
           }}
           as={TextField}
           InputLabelProps={{
@@ -115,8 +141,11 @@ const SignIn = () => {
                   onClick={handleClickShowPassword}
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
+                  // tabIndex="-1"
                   style={{
-                    color: form.errors.pass ? theme.palette.error.main : "gray",
+                    color: form.errors.email
+                      ? theme.palette.error.main
+                      : "gray",
                   }}
                 >
                   {showPassword ? <Visibility /> : <VisibilityOff />}
@@ -125,18 +154,27 @@ const SignIn = () => {
             ),
           }}
           label="Password"
-          error={!!form.errors.pass || !!form.errors.email}
-          helperText={form.errors.pass && form.errors.pass.message}
+          error={!!form.errors.email}
           variant="outlined"
           fullWidth
         />
       </div>
       <div>
+        {form.errors.email ? (
+          <Typography
+            variant="body2"
+            align="center"
+            style={{ color: theme.palette.error.main }}
+          >
+            {form.errors.email.message}
+          </Typography>
+        ) : null}
         <SubmitButton
           type="submit"
           variant="contained"
           color="primary"
           fullWidth
+          onFocus={() => setShowPassword(false)}
         >
           Sign in
         </SubmitButton>

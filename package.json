@@ -1,37 +1,40 @@
 {
-    "name": "contact-keeper",
-    "version": "1.0.0",
-    "description": "Contact Manager App",
-    "main": "server.js",
-    "license": "MIT",
-    "author": "Bruno Chirelli",
-    "dependencies": {
-        "bcryptjs": "^2.4.3",
-        "config": "^3.3.1",
-        "dotenv": "^8.2.0",
-        "express": "^4.17.1",
-        "express-validator": "^6.6.0",
-        "jsonwebtoken": "^8.5.1",
-        "mongoose": "^5.9.22"
-    },
-    "devDependencies": {
-        "concurrently": "^5.2.0",
-        "nodemon": "^2.0.4",
-        "stylelint": "^13.6.1",
-        "stylelint-config-rational-order": "^0.1.2",
-        "stylelint-config-recommended": "^3.0.0",
-        "stylelint-config-styled-components": "^0.1.1",
-        "stylelint-order": "^4.1.0",
-        "stylelint-processor-styled-components": "^1.10.0"
-    },
-    "scripts": {
-        "start": "node server.js",
-        "server": "nodemon server.js",
-        "client": "cd client && yarn start",
-        "clientinstall": "cd client && yarn add",
-        "dev": "concurrently \"yarn server\" \"yarn client\""
-    },
-    "resolutions": {
-        "styled-components": "^5"
-    }
+  "name": "contact-keeper",
+  "version": "1.0.0",
+  "description": "Contact Manager App",
+  "main": "server.js",
+  "license": "MIT",
+  "author": "Bruno Chirelli",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.0",
+    "formik": "^2.1.5",
+    "formik-material-ui": "^3.0.0-alpha.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.22"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "nodemon": "^2.0.4",
+    "stylelint": "^13.6.1",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-order": "^4.1.0",
+    "stylelint-processor-styled-components": "^1.10.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "cd client && yarn start",
+    "clientinstall": "cd client && yarn add",
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "resolutions": {
+    "styled-components": "^5"
+  }
 }

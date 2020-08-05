@@ -1,15 +1,21 @@
-import React from "react";
-import { Typography, Avatar, Box } from "@material-ui/core";
+import React, { useContext } from "react";
+import { Typography, Avatar, Box, useTheme } from "@material-ui/core";
+
+import AuthContext from "../../context/auth/AuthContext";
 
 const User = () => {
-    return (
-        <Box display="flex">
-            <Avatar style={{ marginRight: "0.5rem" }}>B</Avatar>
-            <Typography variant="h4" paragraph>
-                Hello, Bruno
-            </Typography>
-        </Box>
-    );
+  const theme = useTheme();
+
+  const authContext = useContext(AuthContext);
+  const { isAuthenticated, logout, user } = authContext;
+
+  return (
+    <Box display="flex" color="white">
+      <Typography variant="h4" paragraph>
+        Hello {user && user.name.split(" ")[0]}
+      </Typography>
+    </Box>
+  );
 };
 
 export default User;

@@ -35,6 +35,10 @@ const AlertStyled = styled.div`
     border-image-source: ${({ theme }) =>
       `linear-gradient(to right, ${theme.palette.info.light}, ${theme.palette.info.dark})`};
   }
+  &.alert-error {
+    border-image-source: ${({ theme }) =>
+      `linear-gradient(to right, ${theme.palette.error.light}, ${theme.palette.error.dark})`};
+  }
 
   &.alert-warning {
     border-image-source: ${({ theme }) =>

@@ -13,10 +13,6 @@ app.use(express.json({ extended: false }));
 // Look for a process port OR ...
 const PORT = process.env.PORT || 5000;
 
-app.get("/", (req, res) => {
-  res.json({ msg: "Welcome to ContactKeeper API" });
-});
-
 // Routes
 app.use("/api/users", require("./routes/users"));
 app.use("/api/auth", require("./routes/auth"));

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import ContactContext from "../../context/contact/ContactContext";
 
@@ -11,6 +11,7 @@ import {
   useTheme,
   AccordionActions,
   Button,
+  useMediaQuery,
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 import ContactItemDetails from "./ContactItemDetails";
@@ -26,42 +27,62 @@ const SummaryStyled = styled(AccordionSummary)`
 `;
 
 const SubHeaderStyled = styled(Box)`
-  width: 180px;
+  /* width: 180px;
 
   @media screen and (min-width: 600px) {
     width: 400px;
-  }
+  } */
 `;
 
 const ContactItem = ({
   contact,
-  contact: { name, email, phone, type, id, initial },
+  contact: { name, email, phone, type, _id, initial },
   handleChange,
   expanded,
   contactInitials,
   ...others
 }) => {
+  const [itemWidth, setItemWidth] = useState("100%");
+  const [windowWidth, setWindowWidth] = useState(null);
+
+  const theme = useTheme();
+
   const { deleteContact, setCurrent, clearCurrent } = useContext(
     ContactContext
   );
-  const theme = useTheme();
 
   const handleDelete = () => {
-    deleteContact(id);
+    deleteContact(_id);
     clearCurrent();
   };
+
+  useEffect(() => {
+    // item width minus rest of elements
+    // to noWrap works we need a fixed width value
+    setItemWidth(document.querySelector(".summary").offsetWidth - 100);
+
+    // check when window resizes to upgrade the item width
+    window.addEventListener("resize", () => {
+      setWindowWidth(window.innerWidth);
+    });
+
+    return window.removeEventListener("resize", () => {
+      setWindowWidth(window.innerWidth);
+    });
+  }, [windowWidth]);
 
   return (
     <>
       <Accordion
-        expanded={expanded === id}
-        onChange={handleChange(id)}
+        expanded={expanded === _id}
+        onChange={handleChange(_id)}
         {...others}
       >
         <SummaryStyled
           expandIcon={<ExpandMore />}
-          aria-controls={`panel${id}bh-content`}
-          id={`panel${id}bh-header`}
+          className="summary"
+          aria-controls={`panel${_id}bh-content`}
+          id={`panel${_id}bh-header`}
         >
           <Box>
             <Avatar
@@ -78,11 +99,11 @@ const ContactItem = ({
               {name.charAt(0).toUpperCase()}
             </Avatar>
           </Box>
-          <Box>
+          <Box style={{ width: itemWidth }}>
             <Typography variant="body1" noWrap>
               {name}
             </Typography>
-            {email && expanded !== id ? (
+            {email && expanded !== _id ? (
               <SubHeaderStyled>
                 <Typography variant="body2" noWrap style={{ color: "gray" }}>
                   {email}

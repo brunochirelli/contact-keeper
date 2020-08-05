@@ -3,7 +3,7 @@
  *
  */
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 
 import ContactContext from "../../context/contact/ContactContext";
@@ -26,7 +26,7 @@ const Contacts = () => {
   let contactInitials = new Set();
 
   const contactContext = useContext(ContactContext);
-  const { contacts, filtered } = contactContext;
+  const { contacts, filtered, getContacts } = contactContext;
 
   const [expanded, setExpanded] = useState(false);
 
@@ -42,13 +42,17 @@ const Contacts = () => {
       return <></>;
     });
 
+  useEffect(() => {
+    getContacts();
+  }, []);
+
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={5}>
+    <Grid item container spacing={2}>
+      <Grid item xs={12} md={3}>
         <ContactForm setExpanded={setExpanded} />
       </Grid>
-      <Grid item xs={12} md>
-        {contacts.length >= 2 ? <ContactFilter /> : null}
+      <Grid item xs={12} md={4}>
+        {/* {contacts.length >= 2 ? <ContactFilter /> : null} */}
         {filtered === null ? (
           <>
             {Array.from(contactInitials).map((e, i) => (
@@ -57,7 +61,7 @@ const Contacts = () => {
                 {contacts.map((contact) =>
                   contact.initial === e ? (
                     <ContactItem
-                      key={contact.id}
+                      key={contact._id}
                       contact={contact}
                       handleChange={handleChange}
                       expanded={expanded}
@@ -71,7 +75,7 @@ const Contacts = () => {
           <>
             {filtered.map((contact) => (
               <ContactItem
-                key={contact.id}
+                key={contact._id}
                 contact={contact}
                 handleChange={handleChange}
                 expanded={expanded}

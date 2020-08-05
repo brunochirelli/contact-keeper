@@ -10,6 +10,7 @@ const FilterStyled = styled(Paper)`
   align-items: center;
   width: 100%;
   padding: 0.25rem 0.5rem;
+  background: #f0ecff26;
 
   .input {
     flex: 1;
@@ -18,6 +19,10 @@ const FilterStyled = styled(Paper)`
 
   .icon-button {
     padding: 10px;
+  }
+
+  .MuiInputBase-input {
+    color: white;
   }
 `;
 
@@ -52,8 +57,14 @@ export default function ContactFilter() {
           ref: text,
           onChange: handleFilter,
         }}
+        fullWidth
       />
-      <IconButton type="submit" className="icon-button" aria-label="search">
+      <IconButton
+        type="submit"
+        className="icon-button"
+        aria-label="search"
+        style={{ color: "white" }}
+      >
         <Search />
       </IconButton>
     </FilterStyled>
